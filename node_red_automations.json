@@ -1,0 +1,2162 @@
+[
+    {
+        "id": "1607ced7e7813889",
+        "type": "tab",
+        "label": "Flow 1",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "4029cd359f62540c",
+        "type": "tab",
+        "label": "Flow 1",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "tab_ai_aggregator",
+        "type": "tab",
+        "label": "AI Aggregator",
+        "disabled": true,
+        "locked": true,
+        "info": ""
+    },
+    {
+        "id": "f5aa277c40316126",
+        "type": "tab",
+        "label": "Temperature",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "9709aa6266653019",
+        "type": "tab",
+        "label": "Humidity",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "7d0189d38973ccd7",
+        "type": "tab",
+        "label": "Gas MQ2",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "d18a69c0800b3078",
+        "type": "tab",
+        "label": "Fire",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "e2f740eefb72eac0",
+        "type": "tab",
+        "label": "Door",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "e6c3829ecd3e5244",
+        "type": "tab",
+        "label": "Hourly Sync",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "163bd9e5f85455a5",
+        "type": "tab",
+        "label": "leds simulation",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "cc2893a29fe90838",
+        "type": "tab",
+        "label": "update verification",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "e2bc3a895e7b99f5",
+        "type": "tab",
+        "label": "Flow 2",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "ef6bb18f92a06dab",
+        "type": "tab",
+        "label": "Flow 4",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "6237052f7dd593d3",
+        "type": "tab",
+        "label": "Flow 3",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "7ab955d6b8bfb598",
+        "type": "tab",
+        "label": "Door",
+        "disabled": false,
+        "info": ""
+    },
+    {
+        "id": "99a01abca158b4fb",
+        "type": "subflow",
+        "name": "Offline Counter",
+        "info": "3 consecutive null values → emits offline event.\nFirst non-null after offline → emits online event.\nSilent otherwise.",
+        "category": "smart home",
+        "in": [
+            {
+                "x": 60,
+                "y": 80,
+                "wires": [
+                    {
+                        "id": "45ea2016288b91d8"
+                    }
+                ]
+            }
+        ],
+        "out": [
+            {
+                "x": 480,
+                "y": 80,
+                "wires": [
+                    {
+                        "id": "45ea2016288b91d8",
+                        "port": 0
+                    }
+                ]
+            }
+        ],
+        "env": [
+            {
+                "name": "DEVICE",
+                "type": "str",
+                "value": "device"
+            }
+        ],
+        "color": "#E2D96E"
+    },
+    {
+        "id": "subflow_ai_buffer",
+        "type": "subflow",
+        "name": "AI Sensor Buffer",
+        "info": "Pushes each reading into a global rolling buffer keyed by sensor type.",
+        "category": "smart home",
+        "in": [
+            {
+                "x": 60,
+                "y": 80,
+                "wires": [
+                    {
+                        "id": "fn_push_buffer"
+                    }
+                ]
+            }
+        ],
+        "out": [
+            {
+                "x": 500,
+                "y": 80,
+                "wires": [
+                    {
+                        "id": "fn_push_buffer",
+                        "port": 0
+                    }
+                ]
+            }
+        ],
+        "env": []
+    },
+    {
+        "id": "d97436b6f9eec3b4",
+        "type": "subflow",
+        "name": "Sensor Processor",
+        "info": "Parse → filter → danger-check → emit 3 outputs.\nOut 1: reading (always)\nOut 2: HTTP payload (on significant change)\nOut 3: actuator command (on state flip)",
+        "category": "smart home",
+        "in": [
+            {
+                "x": 60,
+                "y": 120,
+                "wires": [
+                    {
+                        "id": "7c738d0921c1aaf0"
+                    }
+                ]
+            }
+        ],
+        "out": [
+            {
+                "x": 840,
+                "y": 60,
+                "wires": [
+                    {
+                        "id": "684343509b62043d",
+                        "port": 0
+                    }
+                ]
+            },
+            {
+                "x": 840,
+                "y": 120,
+                "wires": [
+                    {
+                        "id": "684343509b62043d",
+                        "port": 1
+                    }
+                ]
+            },
+            {
+                "x": 840,
+                "y": 180,
+                "wires": [
+                    {
+                        "id": "684343509b62043d",
+                        "port": 2
+                    }
+                ]
+            }
+        ],
+        "env": [
+            {
+                "name": "DEVICE",
+                "type": "str",
+                "value": "device"
+            },
+            {
+                "name": "TYPE",
+                "type": "str",
+                "value": "type"
+            },
+            {
+                "name": "VALUE_FIELD",
+                "type": "str",
+                "value": "value"
+            },
+            {
+                "name": "DIFF_THRESHOLD",
+                "type": "num",
+                "value": "5"
+            },
+            {
+                "name": "DANGER_THRESHOLD",
+                "type": "num",
+                "value": "100"
+            },
+            {
+                "name": "FLOW_KEY",
+                "type": "str",
+                "value": "lastValue"
+            },
+            {
+                "name": "ACTUATOR_STATE_KEY",
+                "type": "str",
+                "value": "actuatorState"
+            }
+        ],
+        "color": "#3FADB5"
+    },
+    {
+        "id": "0531483de26ff47c",
+        "type": "subflow",
+        "name": "history api call",
+        "info": "",
+        "category": "smart home",
+        "in": [
+            {
+                "x": 320,
+                "y": 180,
+                "wires": [
+                    {
+                        "id": "a4a144295f56c334"
+                    }
+                ]
+            }
+        ],
+        "out": [
+            {
+                "x": 780,
+                "y": 180,
+                "wires": [
+                    {
+                        "id": "a4a144295f56c334",
+                        "port": 0
+                    }
+                ]
+            }
+        ],
+        "env": [],
+        "meta": {},
+        "color": "#E2D96E"
+    },
+    {
+        "id": "subflow:device-status",
+        "type": "subflow",
+        "name": "Device Status Handler",
+        "info": "Input: set:on or set:off message. Sends HTTP POST with device status.",
+        "category": "smart home",
+        "in": [
+            {
+                "x": 300,
+                "y": 160,
+                "wires": [
+                    {
+                        "id": "1b2438466fb746bc"
+                    }
+                ]
+            }
+        ],
+        "out": [],
+        "env": [
+            {
+                "name": "deviceName",
+                "type": "str",
+                "value": "my-device",
+                "ui": {
+                    "label": {
+                        "en-US": "Device Name"
+                    },
+                    "type": "input",
+                    "opts": {
+                        "types": [
+                            "str",
+                            "env"
+                        ]
+                    }
+                }
+            },
+            {
+                "name": "logMessage",
+                "type": "str",
+                "value": ""
+            }
+        ],
+        "meta": {},
+        "color": "#3FADB5"
+    },
+    {
+        "id": "28d451abeac13e57",
+        "type": "ui_base",
+        "theme": {
+            "name": "theme-light",
+            "lightTheme": {
+                "default": "#0094CE",
+                "baseColor": "#0094CE",
+                "baseFont": "-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif",
+                "edited": false
+            },
+            "darkTheme": {
+                "default": "#097479",
+                "baseColor": "#097479",
+                "baseFont": "-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif",
+                "edited": false
+            },
+            "customTheme": {
+                "name": "Untitled Theme 1",
+                "default": "#4B7930",
+                "baseColor": "#4B7930",
+                "baseFont": "-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif"
+            },
+            "themeState": {
+                "base-color": {
+                    "default": "#0094CE",
+                    "value": "#0094CE",
+                    "edited": false
+                },
+                "page-titlebar-backgroundColor": {
+                    "value": "#0094CE",
+                    "edited": false
+                },
+                "page-backgroundColor": {
+                    "value": "#fafafa",
+                    "edited": false
+                },
+                "page-sidebar-backgroundColor": {
+                    "value": "#ffffff",
+                    "edited": false
+                },
+                "group-textColor": {
+                    "value": "#1bbfff",
+                    "edited": false
+                },
+                "group-borderColor": {
+                    "value": "#ffffff",
+                    "edited": false
+                },
+                "group-backgroundColor": {
+                    "value": "#ffffff",
+                    "edited": false
+                },
+                "widget-textColor": {
+                    "value": "#111111",
+                    "edited": false
+                },
+                "widget-backgroundColor": {
+                    "value": "#0094ce",
+                    "edited": false
+                },
+                "widget-borderColor": {
+                    "value": "#ffffff",
+                    "edited": false
+                },
+                "base-font": {
+                    "value": "-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif"
+                }
+            },
+            "angularTheme": {
+                "primary": "indigo",
+                "accents": "blue",
+                "warn": "red",
+                "background": "grey",
+                "palette": "light"
+            }
+        },
+        "site": {
+            "name": "Node-RED Dashboard",
+            "hideToolbar": "false",
+            "allowSwipe": "false",
+            "lockMenu": "false",
+            "allowTempTheme": "true",
+            "dateFormat": "DD/MM/YYYY",
+            "sizes": {
+                "sx": 48,
+                "sy": 48,
+                "gx": 6,
+                "gy": 6,
+                "cx": 6,
+                "cy": 6,
+                "px": 0,
+                "py": 0
+            }
+        }
+    },
+    {
+        "id": "c21a89acde50b97e",
+        "type": "mqtt-broker",
+        "name": "rpi4 connection",
+        "broker": "localhost",
+        "port": 1883,
+        "clientid": "",
+        "autoConnect": true,
+        "usetls": false,
+        "protocolVersion": 4,
+        "keepalive": 60,
+        "cleansession": true,
+        "autoUnsubscribe": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthRetain": "false",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closeRetain": "false",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willRetain": "false",
+        "willPayload": "",
+        "willMsg": {},
+        "userProps": "",
+        "sessionExpiry": ""
+    },
+    {
+        "id": "mqtt_broker_local_001",
+        "type": "mqtt-broker",
+        "name": "Local Mosquitto",
+        "broker": "127.0.0.1",
+        "port": "1883",
+        "clientid": "nodered-gas-flow",
+        "autoConnect": true,
+        "usetls": false,
+        "protocolVersion": "4",
+        "keepalive": "60",
+        "cleansession": true,
+        "autoUnsubscribe": true,
+        "birthTopic": "smarthome/nodered/status",
+        "birthQos": "1",
+        "birthRetain": "false",
+        "birthPayload": "online",
+        "birthMsg": {},
+        "closeTopic": "smarthome/nodered/status",
+        "closeQos": "1",
+        "closeRetain": "false",
+        "closePayload": "offline",
+        "closeMsg": {},
+        "willTopic": "smarthome/nodered/status",
+        "willQos": "1",
+        "willRetain": "false",
+        "willPayload": "offline",
+        "willMsg": {},
+        "userProps": "",
+        "sessionExpiry": ""
+    },
+    {
+        "id": "efe420858347adcd",
+        "type": "ui_tab",
+        "name": "Home",
+        "icon": "dashboard",
+        "disabled": false,
+        "hidden": false
+    },
+    {
+        "id": "b69cf4e1a4f5a23a",
+        "type": "ui_group",
+        "name": "smart lamba",
+        "tab": "efe420858347adcd",
+        "order": 1,
+        "disp": true,
+        "width": "2",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "mqtt_broker",
+        "type": "mqtt-broker",
+        "name": "Local MQTT",
+        "broker": "192.168.1.100",
+        "port": "1883",
+        "clientid": "",
+        "autoConnect": true,
+        "usetls": false,
+        "protocolVersion": "4",
+        "keepalive": "60",
+        "cleansession": true
+    },
+    {
+        "id": "45ea2016288b91d8",
+        "type": "function",
+        "z": "99a01abca158b4fb",
+        "name": "Track online/offline",
+        "func": "const DEVICE    = env.get('DEVICE');\nlet   count     = flow.get('nullCount')  || 0;\nlet   isOffline = flow.get('isOffline')  || false;\nconst value     = msg.payload?.value;\n\nif (value === null || value === undefined) {\n    count++;\n    flow.set('nullCount', count);\n    if (count >= 3 && !isOffline) {\n        flow.set('isOffline', true);\n        return { payload: { device: DEVICE, status: 'offline' } };\n    }\n    return null;\n}\n\nflow.set('nullCount', 0);\nif (isOffline) {\n    flow.set('isOffline', false);\n    return { payload: { device: DEVICE, status: 'online' } };\n}\nreturn null;",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 260,
+        "y": 80,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "fn_push_buffer",
+        "type": "function",
+        "z": "subflow_ai_buffer",
+        "name": "Push to global buffer",
+        "func": "const type  = msg.payload.type;\nconst value = msg.payload.value;\nconst time  = msg.payload.time || Date.now();\n\nif (type === undefined || value === undefined) return null;\n\nlet buf = global.get('aiBuffer') || {};\nif (!buf[type]) buf[type] = [];\n\nbuf[type].push({ value, time });\n\nif (buf[type].length > 120) buf[type].shift();\n\nglobal.set('aiBuffer', buf);\n\nreturn msg;",
+        "outputs": 1,
+        "x": 280,
+        "y": 80,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "7c738d0921c1aaf0",
+        "type": "function",
+        "z": "d97436b6f9eec3b4",
+        "name": "1 · Parse & filter",
+        "func": "const valueField = env.get('VALUE_FIELD');\nconst device     = env.get('DEVICE');\nconst type       = env.get('TYPE');\nconst diffThresh = Number(env.get('DIFF_THRESHOLD'));\nconst flowKey    = env.get('FLOW_KEY');\n\nif (typeof msg.payload === 'string') {\n    try { msg.payload = JSON.parse(msg.payload); }\n    catch(e) { node.warn('Invalid JSON'); return null; }\n}\n\nconst value = msg.payload[valueField];\nif (value === undefined || value === null) {\n    node.warn(type + ': value field missing');\n    return null;\n}\n\nconst reading = { device, type, value, time: Date.now() };\n\nglobal.set(type + '_lastReading', reading);\n\nlet buf = global.get('aiBuffer') || {};\nif (!buf[type]) buf[type] = [];\nbuf[type].push({ value, time: reading.time });\nif (buf[type].length > 120) buf[type].shift();\nglobal.set('aiBuffer', buf);\n\nconst lastValue  = flow.get(flowKey);\nconst shouldSend = (lastValue === undefined || lastValue === null)\n                || (Math.abs(value - lastValue) >= diffThresh);\nif (shouldSend) flow.set(flowKey, value);\n\nmsg.reading    = reading;\nmsg.shouldSend = shouldSend;\nmsg.payload    = reading;\nreturn msg;",
+        "outputs": 1,
+        "x": 280,
+        "y": 120,
+        "wires": [
+            [
+                "fdef4be365b06fe6"
+            ]
+        ]
+    },
+    {
+        "id": "fdef4be365b06fe6",
+        "type": "function",
+        "z": "d97436b6f9eec3b4",
+        "name": "2 · Danger check",
+        "func": "const dangerThresh = flow.get('dynamicDangerThreshold')\n               ?? Number(env.get('DANGER_THRESHOLD'));\nconst actuatorKey  = env.get('ACTUATOR_STATE_KEY');\n\nconst newState     = msg.reading.value > dangerThresh ? 'ON' : 'OFF';\nconst currentState = flow.get(actuatorKey);\nconst stateChanged = currentState !== newState;\n\nif (stateChanged) flow.set(actuatorKey, newState);\n\nmsg.newActuatorState = newState;\nmsg.actuatorChanged  = stateChanged;\nreturn msg;",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 500,
+        "y": 120,
+        "wires": [
+            [
+                "684343509b62043d"
+            ]
+        ]
+    },
+    {
+        "id": "684343509b62043d",
+        "type": "function",
+        "z": "d97436b6f9eec3b4",
+        "name": "3 · Build outputs",
+        "func": "const readingMsg  = { payload: msg.reading };\nconst httpMsg     = msg.shouldSend\n    ? { payload: msg.reading, headers: { 'Content-Type': 'application/json' } }\n    : null;\nconst actuatorMsg = msg.actuatorChanged\n    ? { payload: { set_controller: msg.newActuatorState } }\n    : null;\nreturn [readingMsg, httpMsg, actuatorMsg];",
+        "outputs": 3,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 700,
+        "y": 120,
+        "wires": [
+            [],
+            [],
+            []
+        ]
+    },
+    {
+        "id": "a4a144295f56c334",
+        "type": "http request",
+        "z": "0531483de26ff47c",
+        "name": "POST /history",
+        "method": "POST",
+        "ret": "obj",
+        "paytoqs": "body",
+        "url": "http://localhost:3000/history",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 540,
+        "y": 180,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "1b2438466fb746bc",
+        "type": "function",
+        "z": "subflow:device-status",
+        "name": "function 5",
+        "func": "const isOn = (msg.payload.set === \"on\");\nconst status = isOn ? 'online' : 'offline';\nconst device = env.get(\"deviceName\");\nconst message = env.get(\"logMessage\");\n\nconst logMessage = (message != \"\") ? message : `${device} ${status}`;\n\n// HTTP Request node 1\nlet msg1 = {\n    payload: {\n        device: device,\n        status: status\n    }\n};\n\n// HTTP Request node 2\nlet msg2 = {\n    payload: {\n        device: device,\n        message: logMessage\n    }\n};\n\nreturn [msg1, msg2];",
+        "outputs": 2,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 580,
+        "y": 160,
+        "wires": [
+            [
+                "0e4ae94f71a71b21"
+            ],
+            [
+                "93b8c413a978c8db"
+            ]
+        ]
+    },
+    {
+        "id": "0e4ae94f71a71b21",
+        "type": "http request",
+        "z": "subflow:device-status",
+        "name": "POST /status/update",
+        "method": "POST",
+        "ret": "txt",
+        "paytoqs": "ignore",
+        "url": "http://localhost:3000/status/update",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 920,
+        "y": 160,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "93b8c413a978c8db",
+        "type": "http request",
+        "z": "subflow:device-status",
+        "name": "POST /log",
+        "method": "POST",
+        "ret": "txt",
+        "paytoqs": "ignore",
+        "url": "http:/localhost:3000/logs",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 890,
+        "y": 260,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "inject_flush",
+        "type": "inject",
+        "z": "tab_ai_aggregator",
+        "name": "Every 60s",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "60",
+        "crontab": "",
+        "once": true,
+        "onceDelay": "10",
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 120,
+        "y": 120,
+        "wires": [
+            [
+                "fn_aggregate"
+            ]
+        ]
+    },
+    {
+        "id": "fn_aggregate",
+        "type": "function",
+        "z": "tab_ai_aggregator",
+        "name": "Aggregate & flush buffer",
+        "func": "const buf = global.get('aiBuffer') || {};\n\nfunction stats(arr) {\n    if (!arr || arr.length === 0) return {};\n    const vals = arr.map(r => r.value);\n    const avg  = vals.reduce((a, b) => a + b, 0) / vals.length;\n    const min  = Math.min(...vals);\n    const max  = Math.max(...vals);\n    const std  = Math.sqrt(vals.reduce((a, b) => a + Math.pow(b - avg, 2), 0) / vals.length);\n    const span = arr.length > 1 ? (arr[arr.length - 1].time - arr[0].time) / 1000 : 60;\n    const roc  = arr.length > 1 ? (vals[vals.length - 1] - vals[0]) / span : 0;\n    return {\n        avg:   +avg.toFixed(3),\n        min:   +min.toFixed(3),\n        max:   +max.toFixed(3),\n        std:   +std.toFixed(3),\n        roc:   +roc.toFixed(5),\n        count: vals.length\n    };\n}\n\nconst temp     = stats(buf['temperature']);\nconst humidity = stats(buf['humidity']);\nconst mq2      = stats(buf['gas']);\nconst flames   = buf['flame'] || [];\nconst flameTriggers = flames.filter(r => Number(r.value) > 0).length;\n\nconst payload = {\n    timestamp:        new Date().toISOString(),\n    window_seconds:   60,\n    temp_avg:         temp.avg      ?? null,\n    temp_min:         temp.min      ?? null,\n    temp_max:         temp.max      ?? null,\n    temp_std:         temp.std      ?? null,\n    temp_roc:         temp.roc      ?? null,\n    humidity_avg:     humidity.avg  ?? null,\n    humidity_min:     humidity.min  ?? null,\n    humidity_max:     humidity.max  ?? null,\n    humidity_std:     humidity.std  ?? null,\n    mq2_avg:          mq2.avg       ?? null,\n    mq2_min:          mq2.min       ?? null,\n    mq2_max:          mq2.max       ?? null,\n    mq2_std:          mq2.std       ?? null,\n    mq2_roc:          mq2.roc       ?? null,\n    flame_triggered:  flameTriggers > 0,\n    flame_count:      flameTriggers,\n    sample_count:     Math.max(temp.count||0, humidity.count||0, mq2.count||0, flames.length)\n};\n\nglobal.set('aiBuffer', {});\n\nmsg.payload = payload;\nmsg.headers = { 'Content-Type': 'application/json' };\nreturn msg;",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 320,
+        "y": 120,
+        "wires": [
+            [
+                "http_post_pg",
+                "debug_aggregate"
+            ]
+        ]
+    },
+    {
+        "id": "http_post_pg",
+        "type": "http request",
+        "z": "tab_ai_aggregator",
+        "name": "POST to NestJS /sensor-windows",
+        "method": "POST",
+        "ret": "obj",
+        "paytoqs": "body",
+        "url": "http://192.168.1.19:3002/sensor-windows",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 580,
+        "y": 120,
+        "wires": [
+            [
+                "debug_response"
+            ]
+        ]
+    },
+    {
+        "id": "debug_aggregate",
+        "type": "debug",
+        "z": "tab_ai_aggregator",
+        "name": "Window payload",
+        "active": true,
+        "tosidebar": true,
+        "complete": "payload",
+        "x": 580,
+        "y": 180,
+        "wires": []
+    },
+    {
+        "id": "debug_response",
+        "type": "debug",
+        "z": "tab_ai_aggregator",
+        "name": "PG response",
+        "active": true,
+        "tosidebar": true,
+        "complete": "payload",
+        "x": 800,
+        "y": 120,
+        "wires": []
+    },
+    {
+        "id": "6ee36230789a5a81",
+        "type": "mqtt in",
+        "z": "f5aa277c40316126",
+        "name": "Set danger threshold",
+        "topic": "smartHome/devices/dht11/temperature/set",
+        "qos": "1",
+        "datatype": "auto-detect",
+        "broker": "c21a89acde50b97e",
+        "nl": false,
+        "rap": true,
+        "rh": "0",
+        "inputs": 0,
+        "x": 160,
+        "y": 100,
+        "wires": [
+            [
+                "0739d30419121384"
+            ]
+        ]
+    },
+    {
+        "id": "0739d30419121384",
+        "type": "change",
+        "z": "f5aa277c40316126",
+        "name": "→ dynamicDangerThreshold",
+        "rules": [
+            {
+                "t": "set",
+                "p": "dynamicDangerThreshold",
+                "pt": "flow",
+                "to": "payload.value",
+                "tot": "msg"
+            }
+        ],
+        "x": 440,
+        "y": 100,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "f33120c17a86cf2d",
+        "type": "mqtt in",
+        "z": "f5aa277c40316126",
+        "name": "DHT11 Temperature",
+        "topic": "smartHome/devices/dht11/temperature/state",
+        "qos": "0",
+        "datatype": "auto-detect",
+        "broker": "c21a89acde50b97e",
+        "nl": false,
+        "rap": false,
+        "rh": "0",
+        "inputs": 0,
+        "x": 160,
+        "y": 200,
+        "wires": [
+            [
+                "c8bc5ad909964b91",
+                "a7f5c01db0cd7867"
+            ]
+        ]
+    },
+    {
+        "id": "c8bc5ad909964b91",
+        "type": "subflow:99a01abca158b4fb",
+        "z": "f5aa277c40316126",
+        "name": "",
+        "env": [
+            {
+                "name": "DEVICE",
+                "value": "dht11",
+                "type": "str"
+            }
+        ],
+        "x": 440,
+        "y": 320,
+        "wires": [
+            [
+                "e9c98f6ce60543e4"
+            ]
+        ]
+    },
+    {
+        "id": "dd82d52dee9cc0be",
+        "type": "debug",
+        "z": "f5aa277c40316126",
+        "name": "raw reading",
+        "active": false,
+        "tosidebar": true,
+        "complete": "payload",
+        "x": 700,
+        "y": 140,
+        "wires": []
+    },
+    {
+        "id": "040e64630ea68474",
+        "type": "http request",
+        "z": "f5aa277c40316126",
+        "name": "POST /history",
+        "method": "POST",
+        "ret": "obj",
+        "paytoqs": "body",
+        "url": "http://localhost:3000/history",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 700,
+        "y": 200,
+        "wires": [
+            [
+                "06af4bdf63afeca7"
+            ]
+        ]
+    },
+    {
+        "id": "06af4bdf63afeca7",
+        "type": "debug",
+        "z": "f5aa277c40316126",
+        "name": "history response",
+        "active": false,
+        "tosidebar": true,
+        "complete": "payload",
+        "x": 940,
+        "y": 200,
+        "wires": []
+    },
+    {
+        "id": "e8cfb3a68481d415",
+        "type": "mqtt out",
+        "z": "f5aa277c40316126",
+        "name": "Fan Control",
+        "topic": "smartHome/devices/fan/set",
+        "qos": "1",
+        "retain": "",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "c21a89acde50b97e",
+        "x": 700,
+        "y": 260,
+        "wires": []
+    },
+    {
+        "id": "e9c98f6ce60543e4",
+        "type": "http request",
+        "z": "f5aa277c40316126",
+        "name": "POST /status/update",
+        "method": "POST",
+        "ret": "txt",
+        "paytoqs": "ignore",
+        "url": "http://localhost:3000/status/update",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 700,
+        "y": 320,
+        "wires": [
+            [
+                "7167566de34ca893"
+            ]
+        ]
+    },
+    {
+        "id": "7167566de34ca893",
+        "type": "debug",
+        "z": "f5aa277c40316126",
+        "name": "status response",
+        "active": false,
+        "tosidebar": true,
+        "complete": "payload",
+        "x": 940,
+        "y": 320,
+        "wires": []
+    },
+    {
+        "id": "a7f5c01db0cd7867",
+        "type": "subflow:d97436b6f9eec3b4",
+        "z": "f5aa277c40316126",
+        "name": "Temperature Processor",
+        "env": [
+            {
+                "name": "DEVICE",
+                "value": "dht11",
+                "type": "str"
+            },
+            {
+                "name": "TYPE",
+                "value": "temperature",
+                "type": "str"
+            },
+            {
+                "name": "DANGER_THRESHOLD",
+                "value": "25",
+                "type": "num"
+            }
+        ],
+        "x": 440,
+        "y": 200,
+        "wires": [
+            [
+                "dd82d52dee9cc0be"
+            ],
+            [
+                "040e64630ea68474"
+            ],
+            [
+                "e8cfb3a68481d415"
+            ]
+        ]
+    },
+    {
+        "id": "3bdbae7ec2e803c4",
+        "type": "mqtt in",
+        "z": "9709aa6266653019",
+        "name": "DHT11 Humidity",
+        "topic": "smartHome/devices/dht11/humidity/state",
+        "qos": "0",
+        "datatype": "auto-detect",
+        "broker": "c21a89acde50b97e",
+        "nl": false,
+        "rap": false,
+        "rh": "0",
+        "inputs": 0,
+        "x": 160,
+        "y": 200,
+        "wires": [
+            [
+                "034cbeffd3dc9fb4"
+            ]
+        ]
+    },
+    {
+        "id": "b4ab79dc17c60f81",
+        "type": "debug",
+        "z": "9709aa6266653019",
+        "name": "raw reading",
+        "active": false,
+        "tosidebar": true,
+        "complete": "payload",
+        "x": 680,
+        "y": 140,
+        "wires": []
+    },
+    {
+        "id": "23e71cdaac8ce155",
+        "type": "http request",
+        "z": "9709aa6266653019",
+        "name": "POST /history",
+        "method": "POST",
+        "ret": "obj",
+        "paytoqs": "body",
+        "url": "http://localhost:3000/history",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 680,
+        "y": 200,
+        "wires": [
+            [
+                "37f4b1828b0bd2cf"
+            ]
+        ]
+    },
+    {
+        "id": "37f4b1828b0bd2cf",
+        "type": "debug",
+        "z": "9709aa6266653019",
+        "name": "history response",
+        "active": false,
+        "tosidebar": true,
+        "complete": "payload",
+        "x": 920,
+        "y": 200,
+        "wires": []
+    },
+    {
+        "id": "d753d0876b5f117a",
+        "type": "mqtt out",
+        "z": "9709aa6266653019",
+        "name": "Fan Control",
+        "topic": "smartHome/devices/fan/set",
+        "qos": "1",
+        "retain": "",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "c21a89acde50b97e",
+        "x": 680,
+        "y": 260,
+        "wires": []
+    },
+    {
+        "id": "034cbeffd3dc9fb4",
+        "type": "subflow:d97436b6f9eec3b4",
+        "z": "9709aa6266653019",
+        "name": "Humidity Processor",
+        "env": [
+            {
+                "name": "DEVICE",
+                "value": "dht11",
+                "type": "str"
+            },
+            {
+                "name": "TYPE",
+                "value": "humidity",
+                "type": "str"
+            }
+        ],
+        "x": 420,
+        "y": 200,
+        "wires": [
+            [
+                "b4ab79dc17c60f81"
+            ],
+            [
+                "23e71cdaac8ce155"
+            ],
+            [
+                "d753d0876b5f117a"
+            ]
+        ]
+    },
+    {
+        "id": "b983dcadd30be607",
+        "type": "subflow:99a01abca158b4fb",
+        "z": "7d0189d38973ccd7",
+        "name": "",
+        "env": [
+            {
+                "name": "DEVICE",
+                "value": "mq2",
+                "type": "str"
+            }
+        ],
+        "x": 420,
+        "y": 340,
+        "wires": [
+            [
+                "21a5f5822ca9f641"
+            ]
+        ]
+    },
+    {
+        "id": "3b62d7ba8b038aa7",
+        "type": "debug",
+        "z": "7d0189d38973ccd7",
+        "name": "raw reading",
+        "active": false,
+        "tosidebar": true,
+        "complete": "payload",
+        "x": 680,
+        "y": 140,
+        "wires": []
+    },
+    {
+        "id": "e8a0f09431602af2",
+        "type": "http request",
+        "z": "7d0189d38973ccd7",
+        "name": "POST /history",
+        "method": "POST",
+        "ret": "obj",
+        "paytoqs": "body",
+        "url": "http://localhost:3000/history",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 680,
+        "y": 200,
+        "wires": [
+            [
+                "e6290322c992db86"
+            ]
+        ]
+    },
+    {
+        "id": "e6290322c992db86",
+        "type": "debug",
+        "z": "7d0189d38973ccd7",
+        "name": "history response",
+        "active": false,
+        "tosidebar": true,
+        "complete": "payload",
+        "x": 920,
+        "y": 200,
+        "wires": []
+    },
+    {
+        "id": "a6ca9c61509b1d9d",
+        "type": "mqtt out",
+        "z": "7d0189d38973ccd7",
+        "name": "Alarm Control",
+        "topic": "smartHome/devices/alarm/set",
+        "qos": "1",
+        "retain": "",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "c21a89acde50b97e",
+        "x": 680,
+        "y": 260,
+        "wires": []
+    },
+    {
+        "id": "3005f3ccc13b0437",
+        "type": "function",
+        "z": "7d0189d38973ccd7",
+        "name": "Build notification",
+        "func": "msg.payload = { message: 'MQ2 sensor detected high gas/smoke level', type: 'ALARM' };\nmsg.headers = { 'Content-Type': 'application/json' };\nreturn msg;",
+        "outputs": 1,
+        "x": 680,
+        "y": 340,
+        "wires": [
+            [
+                "ac899f22db1307b1"
+            ]
+        ]
+    },
+    {
+        "id": "ac899f22db1307b1",
+        "type": "http request",
+        "z": "7d0189d38973ccd7",
+        "name": "POST /notifications",
+        "method": "POST",
+        "ret": "obj",
+        "paytoqs": "body",
+        "url": "http://localhost:3000/notifications",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 900,
+        "y": 340,
+        "wires": [
+            [
+                "6c2fa7e2fb8ed717"
+            ]
+        ]
+    },
+    {
+        "id": "6c2fa7e2fb8ed717",
+        "type": "debug",
+        "z": "7d0189d38973ccd7",
+        "name": "notify response",
+        "active": false,
+        "tosidebar": true,
+        "complete": "payload",
+        "x": 1120,
+        "y": 340,
+        "wires": []
+    },
+    {
+        "id": "21a5f5822ca9f641",
+        "type": "http request",
+        "z": "7d0189d38973ccd7",
+        "name": "POST /status/update",
+        "method": "POST",
+        "ret": "txt",
+        "paytoqs": "ignore",
+        "url": "http://localhost:3000/status/update",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 680,
+        "y": 420,
+        "wires": [
+            [
+                "cf52c335cfb042ce"
+            ]
+        ]
+    },
+    {
+        "id": "cf52c335cfb042ce",
+        "type": "debug",
+        "z": "7d0189d38973ccd7",
+        "name": "status response",
+        "active": false,
+        "tosidebar": true,
+        "complete": "payload",
+        "x": 920,
+        "y": 420,
+        "wires": []
+    },
+    {
+        "id": "6e983329fe0f97f6",
+        "type": "subflow:d97436b6f9eec3b4",
+        "z": "7d0189d38973ccd7",
+        "name": "Gas Processor",
+        "env": [
+            {
+                "name": "DEVICE",
+                "value": "mq2",
+                "type": "str"
+            },
+            {
+                "name": "TYPE",
+                "value": "gas",
+                "type": "str"
+            },
+            {
+                "name": "DANGER_THRESHOLD",
+                "value": "5",
+                "type": "num"
+            }
+        ],
+        "x": 420,
+        "y": 200,
+        "wires": [
+            [
+                "3b62d7ba8b038aa7"
+            ],
+            [
+                "e8a0f09431602af2"
+            ],
+            [
+                "a6ca9c61509b1d9d",
+                "3005f3ccc13b0437"
+            ]
+        ]
+    },
+    {
+        "id": "45dfba1201fbcc3e",
+        "type": "mqtt in",
+        "z": "d18a69c0800b3078",
+        "name": "Flame Sensor",
+        "topic": "smartHome/devices/fireSensor/fire/state",
+        "qos": "0",
+        "datatype": "auto-detect",
+        "broker": "c21a89acde50b97e",
+        "nl": false,
+        "rap": false,
+        "rh": "0",
+        "inputs": 0,
+        "x": 160,
+        "y": 200,
+        "wires": [
+            [
+                "fe03c1d8f5d8b367"
+            ]
+        ]
+    },
+    {
+        "id": "fe03c1d8f5d8b367",
+        "type": "function",
+        "z": "d18a69c0800b3078",
+        "name": "Fire alarm logic",
+        "func": "let data = msg.payload;\nif (typeof data === 'string') {\n    try { data = JSON.parse(data); } catch(e) { data = { value: Number(data) }; }\n}\nif (typeof data === 'number') data = { value: data };\n\nlet buf = global.get('aiBuffer') || {};\nif (!buf['flame']) buf['flame'] = [];\nbuf['flame'].push({ value: Number(data?.value) || 0, time: Date.now() });\nif (buf['flame'].length > 120) buf['flame'].shift();\nglobal.set('aiBuffer', buf);\n\nconst flameValue = Number(data?.value);\nif (Number.isNaN(flameValue)) return null;\n\nconst lastValue = flow.get('lastFlameValue');\nflow.set('lastFlameValue', flameValue);\n\nif (flameValue === 1 && flameValue !== lastValue) {\n    const notifyMsg = {\n        payload: { message: 'Flame sensor detected fire!', type: 'ALARM' },\n        headers: { 'Content-Type': 'application/json' }\n    };\n    const alarmMsg  = { payload: { set_controller: 'ON' } };\n    return [notifyMsg, alarmMsg];\n}\nreturn [null, null];",
+        "outputs": 2,
+        "x": 400,
+        "y": 200,
+        "wires": [
+            [
+                "998fe32574be5faf"
+            ],
+            [
+                "1f834951775fa9bf"
+            ]
+        ]
+    },
+    {
+        "id": "998fe32574be5faf",
+        "type": "http request",
+        "z": "d18a69c0800b3078",
+        "name": "POST /notifications",
+        "method": "POST",
+        "ret": "obj",
+        "paytoqs": "body",
+        "url": "http://localhost:3000/notifications",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 650,
+        "y": 160,
+        "wires": [
+            [
+                "fb8294e9c396b2f0"
+            ]
+        ]
+    },
+    {
+        "id": "fb8294e9c396b2f0",
+        "type": "debug",
+        "z": "d18a69c0800b3078",
+        "name": "notify response",
+        "active": false,
+        "tosidebar": true,
+        "complete": "payload",
+        "x": 900,
+        "y": 160,
+        "wires": []
+    },
+    {
+        "id": "1f834951775fa9bf",
+        "type": "mqtt out",
+        "z": "d18a69c0800b3078",
+        "name": "Alarm Control",
+        "topic": "smartHome/devices/alarm/set",
+        "qos": "1",
+        "retain": "",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "c21a89acde50b97e",
+        "x": 660,
+        "y": 240,
+        "wires": []
+    },
+    {
+        "id": "190b88ecc738553f",
+        "type": "inject",
+        "z": "e6c3829ecd3e5244",
+        "name": "Every Hour at :00",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": true,
+        "onceDelay": "5",
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 140,
+        "y": 200,
+        "wires": [
+            [
+                "71d65699e2cb8da3"
+            ]
+        ]
+    },
+    {
+        "id": "71d65699e2cb8da3",
+        "type": "function",
+        "z": "e6c3829ecd3e5244",
+        "name": "Build hourly payloads",
+        "func": "const sensors = ['temperature', 'humidity', 'gas'];\nconst msgs    = [];\nfor (const s of sensors) {\n    const r = global.get(s + '_lastReading');\n    if (r) msgs.push({\n        payload: r,\n        headers: { 'Content-Type': 'application/json' }\n    });\n}\nreturn [msgs];",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 380,
+        "y": 200,
+        "wires": [
+            [
+                "93a88043b5fbc934"
+            ]
+        ]
+    },
+    {
+        "id": "93a88043b5fbc934",
+        "type": "http request",
+        "z": "e6c3829ecd3e5244",
+        "name": "POST /history",
+        "method": "POST",
+        "ret": "obj",
+        "paytoqs": "body",
+        "url": "http://localhost:3000/history",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 600,
+        "y": 200,
+        "wires": [
+            [
+                "8e1a6b1a7957542a"
+            ]
+        ]
+    },
+    {
+        "id": "8e1a6b1a7957542a",
+        "type": "debug",
+        "z": "e6c3829ecd3e5244",
+        "name": "hourly sync response",
+        "active": false,
+        "tosidebar": true,
+        "complete": "payload",
+        "x": 840,
+        "y": 200,
+        "wires": []
+    },
+    {
+        "id": "43e7df1c20472724",
+        "type": "mqtt in",
+        "z": "163bd9e5f85455a5",
+        "name": "",
+        "topic": "smartHome/devices/lamp/lamp1/set",
+        "qos": "0",
+        "datatype": "auto-detect",
+        "broker": "c21a89acde50b97e",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 340,
+        "y": 120,
+        "wires": [
+            [
+                "c6333995f348836d"
+            ]
+        ]
+    },
+    {
+        "id": "04e952924f4202a7",
+        "type": "mqtt in",
+        "z": "163bd9e5f85455a5",
+        "name": "",
+        "topic": "smartHome/devices/lamp/lamp2/set",
+        "qos": "0",
+        "datatype": "auto-detect",
+        "broker": "c21a89acde50b97e",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 340,
+        "y": 200,
+        "wires": [
+            [
+                "69813d91ebf032fd"
+            ]
+        ]
+    },
+    {
+        "id": "6bed737d42c5a8f1",
+        "type": "mqtt in",
+        "z": "163bd9e5f85455a5",
+        "name": "",
+        "topic": "smartHome/devices/fan/fan1/set",
+        "qos": "0",
+        "datatype": "auto-detect",
+        "broker": "c21a89acde50b97e",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 350,
+        "y": 380,
+        "wires": [
+            [
+                "774cac7e3d0da1d1"
+            ]
+        ]
+    },
+    {
+        "id": "5a0fa12075128fb5",
+        "type": "mqtt in",
+        "z": "163bd9e5f85455a5",
+        "name": "",
+        "topic": "smartHome/devices/fan/fan2/set",
+        "qos": "0",
+        "datatype": "auto-detect",
+        "broker": "c21a89acde50b97e",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 350,
+        "y": 460,
+        "wires": [
+            [
+                "8017101a0961b737"
+            ]
+        ]
+    },
+    {
+        "id": "847268191a1d8b9d",
+        "type": "ui_led",
+        "z": "163bd9e5f85455a5",
+        "order": 0,
+        "group": "b69cf4e1a4f5a23a",
+        "width": "2",
+        "height": "3",
+        "label": "",
+        "labelPlacement": "left",
+        "labelAlignment": "left",
+        "colorForValue": [
+            {
+                "color": "#ff0000",
+                "value": "false",
+                "valueType": "bool"
+            },
+            {
+                "color": "#008000",
+                "value": "true",
+                "valueType": "bool"
+            }
+        ],
+        "allowColorForValueInMessage": false,
+        "shape": "circle",
+        "showGlow": true,
+        "name": "",
+        "x": 810,
+        "y": 120,
+        "wires": []
+    },
+    {
+        "id": "2f1065865307325d",
+        "type": "ui_led",
+        "z": "163bd9e5f85455a5",
+        "order": 0,
+        "group": "b69cf4e1a4f5a23a",
+        "width": "2",
+        "height": "3",
+        "label": "",
+        "labelPlacement": "left",
+        "labelAlignment": "left",
+        "colorForValue": [
+            {
+                "color": "#ff0000",
+                "value": "false",
+                "valueType": "bool"
+            },
+            {
+                "color": "#008000",
+                "value": "true",
+                "valueType": "bool"
+            }
+        ],
+        "allowColorForValueInMessage": false,
+        "shape": "circle",
+        "showGlow": true,
+        "name": "",
+        "x": 810,
+        "y": 200,
+        "wires": []
+    },
+    {
+        "id": "c6333995f348836d",
+        "type": "function",
+        "z": "163bd9e5f85455a5",
+        "name": "function 1",
+        "func": "const status = (msg.payload.set === \"on\")\nmsg.payload = status;\nreturn msg ;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 620,
+        "y": 120,
+        "wires": [
+            [
+                "847268191a1d8b9d"
+            ]
+        ]
+    },
+    {
+        "id": "69813d91ebf032fd",
+        "type": "function",
+        "z": "163bd9e5f85455a5",
+        "name": "function 2",
+        "func": "const status = (msg.payload.set === \"on\")\nmsg.payload = status;\nreturn msg ;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 620,
+        "y": 200,
+        "wires": [
+            [
+                "2f1065865307325d"
+            ]
+        ]
+    },
+    {
+        "id": "2a9b94ca8a0555d0",
+        "type": "ui_led",
+        "z": "163bd9e5f85455a5",
+        "order": 0,
+        "group": "b69cf4e1a4f5a23a",
+        "width": "2",
+        "height": "3",
+        "label": "",
+        "labelPlacement": "left",
+        "labelAlignment": "left",
+        "colorForValue": [
+            {
+                "color": "#ff0000",
+                "value": "false",
+                "valueType": "bool"
+            },
+            {
+                "color": "#008000",
+                "value": "true",
+                "valueType": "bool"
+            }
+        ],
+        "allowColorForValueInMessage": false,
+        "shape": "circle",
+        "showGlow": true,
+        "name": "",
+        "x": 750,
+        "y": 380,
+        "wires": []
+    },
+    {
+        "id": "abcec410b790d88e",
+        "type": "ui_led",
+        "z": "163bd9e5f85455a5",
+        "order": 0,
+        "group": "b69cf4e1a4f5a23a",
+        "width": "2",
+        "height": "3",
+        "label": "",
+        "labelPlacement": "left",
+        "labelAlignment": "left",
+        "colorForValue": [
+            {
+                "color": "#ff0000",
+                "value": "false",
+                "valueType": "bool"
+            },
+            {
+                "color": "#008000",
+                "value": "true",
+                "valueType": "bool"
+            }
+        ],
+        "allowColorForValueInMessage": false,
+        "shape": "circle",
+        "showGlow": true,
+        "name": "",
+        "x": 750,
+        "y": 460,
+        "wires": []
+    },
+    {
+        "id": "774cac7e3d0da1d1",
+        "type": "function",
+        "z": "163bd9e5f85455a5",
+        "name": "function 3",
+        "func": "const status = (msg.payload.set === \"on\")\nmsg.payload = status;\nreturn msg ;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 600,
+        "y": 380,
+        "wires": [
+            [
+                "2a9b94ca8a0555d0"
+            ]
+        ]
+    },
+    {
+        "id": "8017101a0961b737",
+        "type": "function",
+        "z": "163bd9e5f85455a5",
+        "name": "function 4",
+        "func": "const status = (msg.payload.set === \"on\")\nmsg.payload = status;\nreturn msg ;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 600,
+        "y": 460,
+        "wires": [
+            [
+                "abcec410b790d88e"
+            ]
+        ]
+    },
+    {
+        "id": "e5a17afe97e9752e",
+        "type": "mqtt in",
+        "z": "cc2893a29fe90838",
+        "name": "",
+        "topic": "smartHome/devices/lamp/lamp1/set",
+        "qos": "0",
+        "datatype": "auto-detect",
+        "broker": "c21a89acde50b97e",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 400,
+        "y": 260,
+        "wires": [
+            [
+                "04ec3e1c353d695d"
+            ]
+        ]
+    },
+    {
+        "id": "35b255fc377be8be",
+        "type": "mqtt in",
+        "z": "cc2893a29fe90838",
+        "name": "",
+        "topic": "smartHome/devices/lamp/lamp2/set",
+        "qos": "0",
+        "datatype": "auto-detect",
+        "broker": "c21a89acde50b97e",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 400,
+        "y": 340,
+        "wires": [
+            [
+                "d46f82fbba4eae3c"
+            ]
+        ]
+    },
+    {
+        "id": "ad297a7fcf94c555",
+        "type": "mqtt in",
+        "z": "cc2893a29fe90838",
+        "name": "",
+        "topic": "smartHome/devices/fan/fan1/set",
+        "qos": "0",
+        "datatype": "auto-detect",
+        "broker": "c21a89acde50b97e",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 390,
+        "y": 420,
+        "wires": [
+            [
+                "711f32dfae3fa613"
+            ]
+        ]
+    },
+    {
+        "id": "92564baa5934553e",
+        "type": "mqtt in",
+        "z": "cc2893a29fe90838",
+        "name": "",
+        "topic": "smartHome/devices/fan/fan2/set",
+        "qos": "0",
+        "datatype": "auto-detect",
+        "broker": "c21a89acde50b97e",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 390,
+        "y": 480,
+        "wires": [
+            [
+                "59757eb7354d45a4"
+            ]
+        ]
+    },
+    {
+        "id": "b6f2e57971707caa",
+        "type": "mqtt in",
+        "z": "cc2893a29fe90838",
+        "name": "",
+        "topic": "smartHome/devices/alarm/set",
+        "qos": "0",
+        "datatype": "auto-detect",
+        "broker": "c21a89acde50b97e",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 400,
+        "y": 560,
+        "wires": [
+            [
+                "5e4a7ea0ae655c5f"
+            ]
+        ]
+    },
+    {
+        "id": "04ec3e1c353d695d",
+        "type": "subflow:subflow:device-status",
+        "z": "cc2893a29fe90838",
+        "name": "",
+        "env": [
+            {
+                "name": "deviceName",
+                "value": "lamp1",
+                "type": "str"
+            }
+        ],
+        "x": 700,
+        "y": 260,
+        "wires": []
+    },
+    {
+        "id": "d46f82fbba4eae3c",
+        "type": "subflow:subflow:device-status",
+        "z": "cc2893a29fe90838",
+        "name": "",
+        "env": [
+            {
+                "name": "deviceName",
+                "value": "lamp2",
+                "type": "str"
+            }
+        ],
+        "x": 720,
+        "y": 340,
+        "wires": []
+    },
+    {
+        "id": "711f32dfae3fa613",
+        "type": "subflow:subflow:device-status",
+        "z": "cc2893a29fe90838",
+        "name": "",
+        "env": [
+            {
+                "name": "deviceName",
+                "value": "fan1",
+                "type": "str"
+            }
+        ],
+        "x": 700,
+        "y": 420,
+        "wires": []
+    },
+    {
+        "id": "59757eb7354d45a4",
+        "type": "subflow:subflow:device-status",
+        "z": "cc2893a29fe90838",
+        "name": "",
+        "env": [
+            {
+                "name": "deviceName",
+                "value": "fan2",
+                "type": "str"
+            }
+        ],
+        "x": 680,
+        "y": 480,
+        "wires": []
+    },
+    {
+        "id": "5e4a7ea0ae655c5f",
+        "type": "subflow:subflow:device-status",
+        "z": "cc2893a29fe90838",
+        "name": "",
+        "env": [
+            {
+                "name": "deviceName",
+                "value": "alarm",
+                "type": "str"
+            }
+        ],
+        "x": 680,
+        "y": 560,
+        "wires": []
+    },
+    {
+        "id": "cd9f4061df1ee94f",
+        "type": "mqtt in",
+        "z": "7ab955d6b8bfb598",
+        "name": "RFID Reader",
+        "topic": "smartHome/devices/door/testCard",
+        "qos": "0",
+        "datatype": "json",
+        "broker": "c21a89acde50b97e",
+        "nl": false,
+        "rap": false,
+        "rh": "0",
+        "inputs": 0,
+        "x": 150,
+        "y": 240,
+        "wires": [
+            [
+                "37239531ad2a1ebd"
+            ]
+        ]
+    },
+    {
+        "id": "37239531ad2a1ebd",
+        "type": "function",
+        "z": "7ab955d6b8bfb598",
+        "name": "Prepare Verify Request",
+        "func": "msg.headers = {\n    'Content-Type': 'application/json'\n};\n\nmsg.payload = {\n    cardTag: msg.payload.cardTag\n};\n\nreturn msg;",
+        "outputs": 1,
+        "x": 390,
+        "y": 240,
+        "wires": [
+            [
+                "93e456ac9fdd3d95"
+            ]
+        ]
+    },
+    {
+        "id": "93e456ac9fdd3d95",
+        "type": "http request",
+        "z": "7ab955d6b8bfb598",
+        "name": "Verify Tag Backend",
+        "method": "POST",
+        "ret": "obj",
+        "paytoqs": "ignore",
+        "url": "http://localhost:3000/users/verify-tag",
+        "persist": false,
+        "x": 650,
+        "y": 240,
+        "wires": [
+            [
+                "078ad176cf88d136",
+                "1c24475aec8d9339"
+            ]
+        ]
+    },
+    {
+        "id": "078ad176cf88d136",
+        "type": "switch",
+        "z": "7ab955d6b8bfb598",
+        "name": "status == success",
+        "property": "payload.data.status",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "success",
+                "vt": "str"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 1,
+        "x": 400,
+        "y": 360,
+        "wires": [
+            [
+                "7cf13cb7a30c9d7d"
+            ]
+        ]
+    },
+    {
+        "id": "7cf13cb7a30c9d7d",
+        "type": "function",
+        "z": "7ab955d6b8bfb598",
+        "name": "Toggle Lamp State",
+        "func": "let lampState = flow.get('lampState') || 'off';\n\nlampState = lampState === 'on' ? 'off' : 'on';\n\nflow.set('lampState', lampState);\n\nmsg.payload = {\n    set: lampState\n};\n\nreturn msg;",
+        "outputs": 1,
+        "x": 670,
+        "y": 360,
+        "wires": [
+            [
+                "e3aff23d6bbfb945",
+                "1ae5c664138ee8c0"
+            ]
+        ]
+    },
+    {
+        "id": "e3aff23d6bbfb945",
+        "type": "mqtt out",
+        "z": "7ab955d6b8bfb598",
+        "name": "Toggle Lamp",
+        "topic": "smartHome/devices/lamp/lamp1/set",
+        "qos": "",
+        "retain": "",
+        "broker": "c21a89acde50b97e",
+        "x": 950,
+        "y": 360,
+        "wires": []
+    },
+    {
+        "id": "1c24475aec8d9339",
+        "type": "debug",
+        "z": "7ab955d6b8bfb598",
+        "name": "Backend Response",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "complete": "payload",
+        "x": 910,
+        "y": 240,
+        "wires": []
+    },
+    {
+        "id": "1ae5c664138ee8c0",
+        "type": "debug",
+        "z": "7ab955d6b8bfb598",
+        "name": "Toggle State",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "complete": "payload",
+        "x": 930,
+        "y": 420,
+        "wires": []
+    },
+    {
+        "id": "21640b37e33ef93b",
+        "type": "global-config",
+        "env": [],
+        "modules": {
+            "node-red-dashboard": "3.6.6",
+            "node-red-contrib-ui-led": "0.4.11"
+        }
+    }
+]

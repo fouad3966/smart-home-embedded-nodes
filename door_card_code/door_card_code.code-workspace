@@ -1,0 +1,12 @@
+{
+	"folders": [
+		{
+			"path": "."
+		},
+		{
+			"name": "controller_card_code",
+			"path": "../controller_card_code"
+		}
+	],
+	"settings": {}
+}
